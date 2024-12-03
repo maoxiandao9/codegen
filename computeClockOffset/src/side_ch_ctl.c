@@ -39,6 +39,7 @@
 
 double data_buffer[MAX_BUFFER_SIZE]; // 定义缓冲区
 size_t buffer_index = 0; // 缓冲区索引
+bool is_first_run = true;
 
 struct sockaddr_nl src_addr, dest_addr;
 struct nlmsghdr *nlh = NULL;
@@ -446,6 +447,12 @@ int main(const int argc, char * const argv[])
 
         side_info_size = nlh->nlmsg_len-NLMSG_HDRLEN;
         // printf("num_dma_symbol %d\n", side_info_size/8);
+
+        if (is_first_run) {
+            is_first_run = false;
+            side_info_size = 0;
+            side_info_count = 0;
+        }
 
         if (action_flag!=ACTION_SIDE_INFO_GET) {
             if (value_only_flag==0)
